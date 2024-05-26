@@ -11,8 +11,7 @@
         <h1>Duif Detector</h1>
     </header>
     <main>
-
-    
+        <button type="button" onclick="switchCamera()">Switch Camera</button>
 
         <div>Teachable Machine Image Model</div>
         <button type="button" onclick="init()">Start</button>
@@ -21,6 +20,20 @@
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
         <script type="text/javascript">
+            let cameraFacingMode = 'user'; // default to front camera
+
+
+            async function switchCamera() {
+                if (cameraFacingMode === 'user') {
+                    cameraFacingMode = 'environment';
+                } else {
+                    cameraFacingMode = 'user';
+                }
+                await webcam.stop();
+                await webcam.setup({ facingMode: cameraFacingMode });
+                await webcam.play();
+
+            }
             // More API functions here:
             // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
