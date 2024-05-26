@@ -60,15 +60,36 @@
 
 
             async function switchCamera() {
+
             if (cameraFacingMode === 'user') {
                 cameraFacingMode = 'environment';
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const backCamera = devices.find(device => device.kind === 'videoinput' && device.facing === 'environment');
+                if (backCamera) {
+                    await webcam.stop();
+                    const constraints = {
+                        video: {
+                            deviceId: backCamera.deviceId,
+                            facingMode: 'environment'
+                        }
+                    };
+                    await webcam.setup(constraints);
+                    await webcam.play();
+                }
             } else {
                 cameraFacingMode = 'user';
+                await webcam.stop();
+                const constraints = {
+                    video: {
+                        facingMode: 'user'
+                    }
+                };
+                await webcam.setup(constraints);
+                await webcam.play();
             }
-            await webcam.stop();
-            await webcam.setup({ facingMode: cameraFacingMode });
-            await webcam.play();
+
             window.requestAnimationFrame(loop);
+
             }
             //TensorFlow. (n.d.). Blackbox AI (v1.2.3). Retrieved from <https://www.blackbox.ai/>
 
