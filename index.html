@@ -28,8 +28,8 @@
 
             let model, webcam, labelContainer, maxPredictions;
 
-            // Load the image model and setup the webcam
-                async function init() {
+            /* // Load the image model and setup the webcam
+            async function init() {
                 const modelURL = URL + "model.json";
                 const metadataURL = URL + "metadata.json";
 
@@ -54,7 +54,54 @@
                     labelContainer.appendChild(document.createElement("div"));
                 }
             } 
+            */
+
             
+
+
+            async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            // load the model and metadata
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+            // Enumerate the available cameras
+            navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                let rearCameraId = null;
+                devices.forEach(device => {
+                if (device.kind === 'videoinput' && device.label.toLowerCase().includes('back')) {
+                    rearCameraId = device.deviceId;
+                }
+                });
+                // If a rear-facing camera is found, use it
+                if (rearCameraId) {
+                webcam = new tmImage.Webcam(200, 200, true, rearCameraId); // width, height, flip, cameraId
+                } else {
+                webcam = new tmImage.Webcam(200, 200, true); // width, height, flip
+                }
+                // ... (rest of the init function remains the same)
+            })
+            .catch(error => console.error('Error enumerating devices:', error));
+
+            // append elements to the DOM
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+                labelContainer = document.getElementById("label-container");
+                for (let i = 0; i < maxPredictions; i++) { // and class labels
+                    labelContainer.appendChild(document.createElement("div"));
+                }
+            }
+
+
+
+
+
+
+
+
+
+
 
             async function loop() {
                 webcam.update(); // update the webcam frame
