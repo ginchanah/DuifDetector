@@ -94,23 +94,13 @@
 
             //Blackbox AI. (n.d.). Retrieved from https://blackbox.ai/
 
-
-
-
-
-
-
-
-
-
-
             async function loop() {
                 webcam.update(); // update the webcam frame
                 await predict();
                 window.requestAnimationFrame(loop);
             }
 
-            // run the webcam image through the image model
+            /* // run the webcam image through the image model
             async function predict() {
                 // predict can take in an image, video or canvas html element
                 const prediction = await model.predict(webcam.canvas);
@@ -127,6 +117,29 @@
                 const audio = new Audio('ping-82822.mp3');
                 //Sound Effect from <a href="https://pixabay.com/sound-effects/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=82822">Pixabay</a>
                 audio.play();
+            } */
+            
+            sync function predict() {
+            // predict can take in an image, video or canvas html element
+            const prediction = await model.predict(webcam.canvas);
+
+            for (let i = 0; i < maxPredictions; i++) {
+                const classPrediction =
+                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                labelContainer.childNodes[i].innerHTML = classPrediction;
+            }
+
+            // Check if the model predicts more than 80% duif
+            if (prediction[0].probability > 0.8) {
+                // Play a sound in a loop
+                const audio = new Audio('duif_sound.mp3');
+                audio.loop = true; // set loop to true
+                audio.play();
+            } else {
+                // Stop the sound if the prediction is less than 80%
+                audio.pause();
+                audio.currentTime = 0; // reset the audio time
+            }
             }
             
         </script>
