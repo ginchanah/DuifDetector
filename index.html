@@ -20,20 +20,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
         <script type="text/javascript">
-            let cameraFacingMode = 'user'; // default to front camera
-
-
-            async function switchCamera() {
-                if (cameraFacingMode === 'user') {
-                    cameraFacingMode = 'environment';
-                } else {
-                    cameraFacingMode = 'user';
-                }
-                await webcam.stop();
-                await webcam.setup({ facingMode: cameraFacingMode });
-                await webcam.play();
-
-            }
+            
             // More API functions here:
             // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
@@ -68,6 +55,22 @@
                     labelContainer.appendChild(document.createElement("div"));
                 }
             }
+
+            let cameraFacingMode = 'user'; // default to front camera
+
+
+            async function switchCamera() {
+            if (cameraFacingMode === 'user') {
+                cameraFacingMode = 'environment';
+            } else {
+                cameraFacingMode = 'user';
+            }
+            await webcam.stop();
+            await webcam.setup({ facingMode: cameraFacingMode });
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+            }
+            //TensorFlow. (n.d.). Blackbox AI (v1.2.3). Retrieved from <https://www.blackbox.ai/>
 
             async function loop() {
                 webcam.update(); // update the webcam frame
