@@ -132,9 +132,15 @@
             // Check if the model predicts more than 80% duif
             if (prediction[0].probability > 0.8) {
                 // Play a sound in a loop
-                const audio = new Audio('duif_sound.mp3');
+                const audio = new Audio('model/ping-43757.mp3');
+                //Sound Effect from <a href="https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=43757">Pixabay</a>
                 audio.loop = true; // set loop to true
                 audio.play();
+
+                setTimeout(() => {
+                audio.pause();
+                audio.currentTime = 0; // reset the audio time
+                }, 3000);
             } else {
                 // Stop the sound if the prediction is less than 80%
                 audio.pause();
